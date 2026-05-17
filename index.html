@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do Thi Cam Huong — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --accent: #D20C22;
+    --accent2: #FF6375;
+    --muted: #5a5550;
+    --border: rgba(245,240,232,0.10);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(245,240,232,0.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transition: width 0.3s, height 0.3s;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 48px;
+  }
+  nav::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .nav-logo, .nav-menu {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em;
+    color: rgba(245,240,232,0.55);
+    text-decoration: none; position: relative;
+  }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 48px 64px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 80%, rgba(210,12,34,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255,99,117,0.04) 0%, transparent 50%);
+  }
+  .hero-bg-text {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(100px, 16vw, 240px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(245,240,232,0.035);
+    white-space: nowrap; pointer-events: none; user-select: none;
+    letter-spacing: 0.02em;
+  }
+  .hero-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--accent); margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 175px);
+    line-height: 0.9; letter-spacing: 0.01em;
+    color: var(--white);
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.5s;
+  }
+  .hero-name span { color: var(--accent); }
+  .hero-bottom {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 48px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+  .hero-title {
+    font-size: 13px; font-weight: 400; letter-spacing: 0.08em;
+    color: rgba(245,240,232,0.5); line-height: 1.7;
+  }
+  .hero-services { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .svc {
+    font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em;
+    color: rgba(245,240,232,0.35);
+    border: 1px solid rgba(245,240,232,0.1); padding: 4px 12px; border-radius: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .svc:hover { color: var(--accent2); border-color: var(--accent2); }
+  .scroll-hint { display: none; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 0 48px; }
+
+  /* SECTIONS */
+  .section { padding: 80px 48px; }
+  .sec-label {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: var(--accent); margin-bottom: 12px;
+  }
+  .sec-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 78px);
+    letter-spacing: 0.02em; line-height: 1; margin-bottom: 56px;
+  }
+
+  /* EDUCATION */
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .edu-card {
+    background: rgba(245,240,232,0.025); border: 1px solid var(--border);
+    padding: 40px; position: relative; overflow: hidden; transition: background 0.3s;
+  }
+  .edu-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--accent);
+    transform: scaleY(0); transform-origin: top; transition: transform 0.4s ease;
+  }
+  .edu-card:hover { background: rgba(245,240,232,0.05); }
+  .edu-card:hover::before { transform: scaleY(1); }
+  .edu-year { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 16px; }
+  .edu-school { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.03em; margin-bottom: 12px; }
+  .edu-detail { font-size: 13px; color: rgba(245,240,232,0.45); line-height: 1.7; }
+  .gpa-badge {
+    display: inline-block; margin-top: 14px;
+    font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em;
+    color: var(--accent2); border: 1px solid rgba(255,99,117,0.3); padding: 3px 10px; border-radius: 2px;
+  }
+
+  /* EXPERIENCE + TOOLS 2-COL */
+  .exp-tools-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 80px;
+    align-items: start;
+  }
+  .exp-tools-layout .tools-wrap {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    position: sticky;
+    top: 100px;
+  }
+  @media (max-width: 900px) {
+    .exp-tools-layout { grid-template-columns: 1fr; gap: 48px; }
+    .exp-tools-layout .tools-wrap { position: static; }
+  }
+  .exp-item {
+    display: grid; grid-template-columns: 300px 1fr;
+    gap: 56px; padding: 48px 0;
+    border-bottom: 1px solid var(--border);
+    transition: padding-left 0.3s;
+    align-items: start;
+  }
+  .exp-item:hover { padding-left: 10px; }
+  .exp-item:hover .exp-co { color: var(--accent); }
+  .exp-logo { display: none; }
+  .exp-co {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; letter-spacing: 0.04em;
+    color: var(--white); line-height: 1.1;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+    word-break: keep-all;
+  }
+  .exp-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em;
+    color: rgba(245,240,232,0.3);
+    text-transform: uppercase;
+  }
+  .exp-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .exp-desc { list-style: none; }
+  .exp-desc li {
+    font-size: 14px; color: rgba(245,240,232,0.45);
+    line-height: 1.85; padding-left: 20px;
+    position: relative; margin-bottom: 2px;
+    font-weight: 300;
+  }
+  .exp-desc li::before {
+    content: '—'; position: absolute; left: 0;
+    color: var(--accent); opacity: 0.5;
+  }
+
+  /* TOOLS */
+  .tools-wrap { margin-top: 60px; padding-top: 48px; border-top: 1px solid var(--border); }
+  .tools-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 28px; }
+  .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; align-items: center; }
+  .tool {
+    display: flex; flex-direction: row; align-items: center; gap: 12px;
+    cursor: none; transition: transform 0.3s, opacity 0.3s;
+    opacity: 0.75;
+  }
+  .tool:hover { transform: translateY(-2px); opacity: 1; }
+  .tool-icon {
+    width: 36px; height: 36px; flex-shrink: 0; border-radius: 8px;
+    position: relative; overflow: hidden; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px dashed transparent; transition: border-color 0.3s;
+  }
+  .tool-icon:hover { border-color: rgba(245,240,232,0.3); }
+  .tool-icon img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 8px; filter: none; }
+  .tool-icon-upload {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2;
+  }
+  .tool-name {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400;
+    letter-spacing: 0.03em; color: rgba(245,240,232,0.6);
+    transition: color 0.3s; white-space: nowrap;
+  }
+  .tool:hover .tool-name { color: rgba(245,240,232,0.95); }
+
+  /* PROJECTS */
+  .cat-block { margin-bottom: 72px; }
+  .cat-row { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; }
+  .cat-name { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: rgba(245,240,232,0.35); white-space: nowrap; }
+  .cat-line { flex: 1; height: 1px; background: var(--border); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .pcard {
+    position: relative; aspect-ratio: 4/3;
+    border: 1px solid var(--border); border-radius: 2px;
+    overflow: hidden; cursor: none;
+    transition: border-color 0.3s;
+  }
+  .pcard:nth-child(3n+1) { background: rgba(210,12,34,0.07); }
+  .pcard:nth-child(3n+2) { background: rgba(255,99,117,0.05); }
+  .pcard:nth-child(3n+3) { background: rgba(245,240,232,0.03); }
+  .pcard:hover { border-color: rgba(245,240,232,0.25); }
+  .pcard-thumb {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    transition: transform 0.5s ease, opacity 0.3s;
+    opacity: 0.85;
+  }
+  .pcard:hover .pcard-thumb { transform: scale(1.04); opacity: 1; }
+  .pcard-deco {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px; height: 52px;
+    border: 1px solid rgba(245,240,232,0.07); border-radius: 50%;
+    transition: transform 0.4s, opacity 0.4s;
+  }
+  .pcard:hover .pcard-deco { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+  .pcard-inner {
+    position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 16px;
+    background: linear-gradient(to top, rgba(10,10,10,0.88) 0%, transparent 55%);
+  }
+  .pcard-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.04em; transition: color 0.3s; }
+  .pcard:hover .pcard-name { color: var(--accent2); }
+  .pcard-arrow {
+    position: absolute; top: 14px; right: 14px;
+    width: 26px; height: 26px; border: 1px solid rgba(245,240,232,0.18); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: rgba(245,240,232,0.3);
+    opacity: 0; transform: translateY(-4px); transition: all 0.3s;
+  }
+  .pcard:hover .pcard-arrow { opacity: 1; transform: translateY(0); }
+  .pcard-thumb {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 0;
+  }
+
+  /* Video slot in detail page */
+  .detail-video-slot {
+    width: 100%;
+    background: #000;
+    position: relative;
+    line-height: 0;
+  }
+  .detail-video-slot video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .video-label {
+    padding: 10px 16px;
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; color: rgba(245,240,232,0.25);
+    background: #000;
+  }
+  /* Video autoplay on pcard thumbnail */
+  .pcard video.pcard-video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 0;
+  }
+  /* Video play icon on motion pcards */
+  .pcard-play {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px; height: 48px;
+    border: 2px solid rgba(245,240,232,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1; pointer-events: none;
+    transition: border-color 0.3s, transform 0.3s, opacity 0.3s;
+  }
+  .pcard-play::after {
+    content: '';
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 8px 0 8px 14px;
+    border-color: transparent transparent transparent rgba(245,240,232,0.6);
+    margin-left: 3px;
+  }
+  .pcard:hover .pcard-play {
+    border-color: var(--accent); opacity: 0;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 80px 48px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .foot-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 110px);
+    color: transparent; -webkit-text-stroke: 1px rgba(245,240,232,0.12);
+    line-height: 0.9;
+  }
+  .foot-right { text-align: right; }
+  .foot-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: rgba(245,240,232,0.28); margin-bottom: 16px; }
+  .foot-contacts {
+    display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;
+  }
+  .foot-contact-link {
+    font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em;
+    color: rgba(245,240,232,0.55); text-decoration: none;
+    transition: color 0.3s; cursor: none;
+  }
+  .foot-contact-link:hover { color: var(--accent2); }
+  .foot-cta {
+    display: inline-block; font-family: 'Space Mono', monospace; font-size: 11px;
+    letter-spacing: 0.12em; color: var(--white); background: var(--accent);
+    padding: 14px 28px; text-decoration: none; border-radius: 2px; cursor: none;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .foot-cta:hover { background: var(--accent2); color: var(--black); transform: translateY(-2px); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.4; } }
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  .stagger > * { opacity: 0; transform: translateY(18px); transition: opacity 0.55s, transform 0.55s; }
+  .stagger.in > *:nth-child(1)  { opacity: 1; transform: none; transition-delay: 0s; }
+  .stagger.in > *:nth-child(2)  { opacity: 1; transform: none; transition-delay: 0.06s; }
+  .stagger.in > *:nth-child(3)  { opacity: 1; transform: none; transition-delay: 0.12s; }
+  .stagger.in > *:nth-child(4)  { opacity: 1; transform: none; transition-delay: 0.18s; }
+  .stagger.in > *:nth-child(5)  { opacity: 1; transform: none; transition-delay: 0.24s; }
+  .stagger.in > *:nth-child(6)  { opacity: 1; transform: none; transition-delay: 0.30s; }
+  .stagger.in > *:nth-child(7)  { opacity: 1; transform: none; transition-delay: 0.36s; }
+  .stagger.in > *:nth-child(8)  { opacity: 1; transform: none; transition-delay: 0.42s; }
+  .stagger.in > *:nth-child(9)  { opacity: 1; transform: none; transition-delay: 0.48s; }
+  .stagger.in > *:nth-child(10) { opacity: 1; transform: none; transition-delay: 0.54s; }
+  .stagger.in > *:nth-child(11) { opacity: 1; transform: none; transition-delay: 0.60s; }
+  .stagger.in > *:nth-child(12) { opacity: 1; transform: none; transition-delay: 0.66s; }
+  .stagger.in > *:nth-child(13) { opacity: 1; transform: none; transition-delay: 0.72s; }
+  .stagger.in > *:nth-child(14) { opacity: 1; transform: none; transition-delay: 0.78s; }
+  .stagger.in > *:nth-child(15) { opacity: 1; transform: none; transition-delay: 0.84s; }
+  .stagger.in > *:nth-child(16) { opacity: 1; transform: none; transition-delay: 0.90s; }
+
+  @media (max-width: 900px) {
+    nav, #hero, .section, footer { padding-left: 24px; padding-right: 24px; }
+    .divider { margin: 0 24px; }
+    .hero-bg-text { font-size: 60px; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 12px; }
+    .grid3 { grid-template-columns: repeat(2, 1fr); }
+    footer { flex-direction: column; gap: 32px; align-items: flex-start; }
+    .foot-right { text-align: left; }
+    .hero-bottom { flex-direction: column; gap: 24px; align-items: flex-start; }
+    .hero-services { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav>
+  <a class="nav-logo">[ DO THI CAM HUONG ]</a>
+  <span class="nav-menu">[ PORTFOLIO 2026 ]</span>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-bg-text">CREATIVE</div>
+
+  <div class="hero-label">— Multimedia Designer & Content Creator</div>
+
+  <div class="hero-name">
+    DO THI<br><span>CAM HUONG</span>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-title">
+      <span style="font-size:11px;opacity:0.45;letter-spacing:0.14em;">FREELANCER · HO CHI MINH CITY</span>
+    </div>
+    <div class="hero-services">
+      <span class="svc">BRANDING</span>
+      <span class="svc">UI / UX</span>
+      <span class="svc">MOTION GRAPHIC</span>
+      <span class="svc">EDIT VIDEO</span>
+      <span class="svc">AI PRODUCT</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">SCROLL TO EXPLORE</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section class="section">
+  <div class="reveal">
+    <div class="sec-label">02 — Background</div>
+    <div class="sec-title">EDUCATION</div>
+  </div>
+  <div class="edu-grid stagger">
+    <div class="edu-card">
+      <div class="edu-year">2023 — 2026</div>
+      <div class="edu-school">ARENA MULTIMEDIA</div>
+      <div class="edu-detail">Advanced Diploma In Multimedia<br><span style="font-size:12px;color:rgba(245,240,232,0.28);">Creative Design · Motion · UI/UX</span></div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">2019 — 2023</div>
+      <div class="edu-school">HCM CITY UNIVERSITY<br>OF INDUSTRY & TRADE</div>
+      <div class="edu-detail">Major: English Language<br><span class="gpa-badge">GPA 7.31 / 2.93</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section class="section">
+  <div class="reveal">
+    <div class="sec-label">03 — Career</div>
+    <div class="sec-title">EXPERIENCE</div>
+  </div>
+
+  <div class="exp-tools-layout">
+  <div class="exp-list">
+
+    <!-- SUCCESS SPHERE -->
+    <div class="exp-item reveal">
+      <div class="exp-logo" id="logo-0">
+        <img src="https://successsphere.com.au/wp-content/uploads/2022/02/Success-Sphere-Logo.png"
+             onerror="this.style.display='none'" alt="Success Sphere"/>
+        <span class="logo-text">SUCCESS<br>SPHERE</span>
+        <input type="file" accept="image/*" class="exp-logo-upload"/>
+        <span class="exp-logo-hint">UPLOAD</span>
+      </div>
+      <div>
+        <div class="exp-co">SUCCESS SPHERE</div>
+        <div class="exp-period">AUG 2024 — PRESENT</div>
+      </div>
+      <div>
+        <div class="exp-role">Freelance Content Creator</div>
+        <ul class="exp-desc">
+          <li>Planned content and designed thumbnails for TikTok and Instagram.</li>
+          <li>Achieved 12K followers and 1.1 million views on TikTok within 5 months.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- LIFE ON INTERIOR DESIGN -->
+    <div class="exp-item reveal">
+      <div class="exp-logo" id="logo-1">
+        <span class="logo-text" style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;letter-spacing:0.02em;font-style:italic;color:rgba(245,240,232,0.65)">life on</span>
+        <input type="file" accept="image/*" class="exp-logo-upload"/>
+        <span class="exp-logo-hint">UPLOAD</span>
+      </div>
+      <div>
+        <div class="exp-co">LIFE ON INTERIOR DESIGN</div>
+        <div class="exp-period">APR 2025 — PRESENT</div>
+      </div>
+      <div>
+        <div class="exp-role">Multimedia Designer & Content Creator</div>
+        <ul class="exp-desc">
+          <li>Manage and plan content, design, and edit videos and GIFs for Facebook, Instagram, TikTok.</li>
+          <li>Responsible for designing web and app interfaces for projects such as Samwoo, Room by Room, etc.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ALTA MEDIA -->
+    <div class="exp-item reveal">
+      <div class="exp-logo" id="logo-2">
+        <img src="https://altamedia.vn/wp-content/uploads/2021/10/logo-alta-media.png"
+             onerror="this.style.display='none'" alt="Alta Media"/>
+        <span class="logo-text">ALTA<br>MEDIA</span>
+        <input type="file" accept="image/*" class="exp-logo-upload"/>
+        <span class="exp-logo-hint">UPLOAD</span>
+      </div>
+      <div>
+        <div class="exp-co">ALTA MEDIA COMPANY</div>
+        <div class="exp-period">DEC 2024 — FEB 2025</div>
+      </div>
+      <div>
+        <div class="exp-role">UI/UX Design Intern</div>
+        <ul class="exp-desc">
+          <li>Supported design of functional screens for MTC website, Dam Sen, and VHNT Ho Chi Minh.</li>
+          <li>Designed the beverage ordering app interface for Phuc Long App.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERNATIONAL TRADE COUNCIL -->
+    <div class="exp-item reveal">
+      <div class="exp-logo" id="logo-3">
+        <img src="https://itccouncil.org/wp-content/uploads/2021/05/ITC-Logo-300x300.png"
+             onerror="this.style.display='none'" alt="ITC"/>
+        <span class="logo-text">ITC</span>
+        <input type="file" accept="image/*" class="exp-logo-upload"/>
+        <span class="exp-logo-hint">UPLOAD</span>
+      </div>
+      <div>
+        <div class="exp-co">INTERNATIONAL TRADE COUNCIL</div>
+        <div class="exp-period">MAY 2024 — NOV 2024</div>
+      </div>
+      <div>
+        <div class="exp-role">UI/UX Design Intern</div>
+        <ul class="exp-desc">
+          <li>Supported design of functional screens for the Adamftd.org project.</li>
+          <li>Assisted in redesigning the company's website to enhance user experience.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PMAX -->
+    <div class="exp-item reveal">
+      <div class="exp-logo" id="logo-4">
+        <img src="https://pmax.com.vn/wp-content/uploads/2022/06/logo-pmax.svg"
+             onerror="this.style.display='none'" alt="PMAX"/>
+        <span class="logo-text">PMAX</span>
+        <input type="file" accept="image/*" class="exp-logo-upload"/>
+        <span class="exp-logo-hint">UPLOAD</span>
+      </div>
+      <div>
+        <div class="exp-co">PMAX COMPANY</div>
+        <div class="exp-period">AUG 2024 — PRESENT</div>
+      </div>
+      <div>
+        <div class="exp-role">Freelance Graphic Designer</div>
+        <ul class="exp-desc">
+          <li>Design social media graphics including posts, banners, and slides for Facebook and other platforms.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PIXIE -->
+    <div class="exp-item reveal">
+      <div class="exp-logo" id="logo-5">
+        <span class="logo-text" style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;color:#D20C22;">PIXIE</span>
+        <input type="file" accept="image/*" class="exp-logo-upload"/>
+        <span class="exp-logo-hint">UPLOAD</span>
+      </div>
+      <div>
+        <div class="exp-co">PIXIE COMPANY</div>
+        <div class="exp-period">MAY 2023 — FEB 2024</div>
+      </div>
+      <div>
+        <div class="exp-role">Content Creator & Graphic Designer</div>
+        <ul class="exp-desc">
+          <li>Create content for social media (Facebook, TikTok, Instagram, etc.).</li>
+          <li>Design high-quality materials for digital platforms and print media.</li>
+          <li>Support in shooting and editing short videos.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- end exp-list -->
+
+  <div class="tools-wrap reveal">
+    <div class="tools-label">— TOOLS & SOFTWARE</div>
+    <div class="tools stagger">
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1X_iv5W1JzpkYOx49XiaT2yZrueMqjIi_&sz=w100" alt="Figma"/></div>
+        <span class="tool-name">Figma</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1BHvNp2LJ7J3TL_xRdCba0ZOVpTWA80L-&sz=w100" alt="Photoshop"/></div>
+        <span class="tool-name">Photoshop</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1GWShXoB-1nxtxWs43tJ47QjLQl61Wr4g&sz=w100" alt="Illustrator"/></div>
+        <span class="tool-name">Illustrator</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=12mRRg2R9nMHuLCA_ev-fOU6giRx6x4UL&sz=w100" alt="Premiere Pro"/></div>
+        <span class="tool-name">Premiere Pro</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1zZZugKW2xPAtz0G19moJw0lMn_7Gllo8&sz=w100" alt="InDesign"/></div>
+        <span class="tool-name">InDesign</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1XVQhlBQYis8HLjAlOCmauQZ2_NzSJ0U3&sz=w100" alt="After Effects"/></div>
+        <span class="tool-name">After Effects</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1Jeq7xGtTq3Cb8ytqBe96x_nwwPl4c4Yf&sz=w100" alt="Dreamweaver"/></div>
+        <span class="tool-name">Dreamweaver</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1AQbJOV_OPWInpOTds-xhGpwD2eSgp8GW&sz=w100" alt="ZBrush"/></div>
+        <span class="tool-name">ZBrush</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1YoU6dNzpriHiL7PY1VyilxoGZKdyhaT7&sz=w100" alt="Autodesk Maya"/></div>
+        <span class="tool-name">Autodesk Maya</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=135hBCXhHSJPneP_DUw_J29sSDBvKuCZY&sz=w100" alt="DaVinci Resolve"/></div>
+        <span class="tool-name">DaVinci Resolve</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1PSx35xtVNDKeS-LvtR41J3MMs59JtqRR&sz=w100" alt="Substance Painter"/></div>
+        <span class="tool-name">Substance Painter</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1cgoq1iufFXGlZvC67F6ggnn5733g5hl3&sz=w100" alt="Unreal Engine"/></div>
+        <span class="tool-name">Unreal Engine</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1SdYY-HNQTdG55Q04MCOx3GeDAdXt49fn&sz=w100" alt="Claude"/></div>
+        <span class="tool-name">Claude AI</span>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon"><img src="https://drive.google.com/thumbnail?id=1aZhS__5eO-GSq75Z-tdOOuRHcZKMLonP&sz=w100" alt="Gemini"/></div>
+        <span class="tool-name">Gemini</span>
+      </div>
+
+    </div>
+  </div><!-- end tools-wrap -->
+  </div><!-- end exp-tools-layout -->
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section class="section">
+  <div class="reveal">
+    <div class="sec-label">04 — Work</div>
+    <div class="sec-title">FEATURED PROJECTS</div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-row reveal"><span class="cat-name">Brand Identity & Campaign</span><div class="cat-line"></div></div>
+    <div class="grid3 stagger">
+      <div class="pcard" data-project="Onwa" data-cat="Brand Identity & Campaign">
+        <img class="pcard-thumb" src="https://drive.google.com/thumbnail?id=1G9ms51b7flPQFYJn5nwgkiSYD828I2Wx&sz=w800" alt="Onwa"/>
+        <div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Onwa</div></div><div class="pcard-arrow">↗</div>
+      </div>
+      <div class="pcard" data-project="Under Cover" data-cat="Brand Identity & Campaign">
+        <img class="pcard-thumb" src="https://drive.google.com/thumbnail?id=1NrRKsfsbNOsNYMzZbgMfsxzfLbLcq2k2&sz=w800" alt="Under Cover"/>
+        <div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Under Cover</div></div><div class="pcard-arrow">↗</div>
+      </div>
+      <div class="pcard" data-project="SuccessSphere" data-cat="Brand Identity & Campaign"><div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">SuccessSphere</div></div><div class="pcard-arrow">↗</div></div>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-row reveal"><span class="cat-name">UI/UX & Digital Product</span><div class="cat-line"></div></div>
+    <div class="grid3 stagger">
+      <div class="pcard" data-project="Tinpet" data-cat="UI/UX & Digital Product">
+        <img class="pcard-thumb" src="https://drive.google.com/thumbnail?id=1fzLKwK56r1d3EsvXnhVM8C2d1CwTzyWf&sz=w800" alt="Tinpet"/>
+        <div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Tinpet</div></div><div class="pcard-arrow">↗</div>
+      </div>
+      <div class="pcard" data-project="Phúc Long" data-cat="UI/UX & Digital Product">
+        <img class="pcard-thumb" src="https://drive.google.com/thumbnail?id=1kbkXdDDTKLHwHkq509Eo0jskStXYt66L&sz=w800" alt="Phúc Long"/>
+        <div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Phúc Long</div></div><div class="pcard-arrow">↗</div>
+      </div>
+      <div class="pcard" data-project="RbR Bath" data-cat="UI/UX & Digital Product"><div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">RbR Bath</div></div><div class="pcard-arrow">↗</div></div>
+      <div class="pcard" data-project="Grib" data-cat="UI/UX & Digital Product"><div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Grib</div></div><div class="pcard-arrow">↗</div></div>
+      <div class="pcard" data-project="Apartment Care" data-cat="UI/UX & Digital Product"><div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Apartment Care</div></div><div class="pcard-arrow">↗</div></div>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-row reveal"><span class="cat-name">Motion & Video</span><div class="cat-line"></div></div>
+    <div class="grid3 stagger">
+      <div class="pcard" data-project="Onwa" data-cat="Motion & Video">
+        <img class="pcard-thumb" src="https://drive.google.com/thumbnail?id=1G9ms51b7flPQFYJn5nwgkiSYD828I2Wx&sz=w800" alt="Onwa"/>
+        <div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Onwa</div></div><div class="pcard-arrow">↗</div>
+      </div>
+      <div class="pcard" data-project="Apartment Care Motion" data-cat="Motion & Video">
+        <img class="pcard-thumb" src="https://drive.google.com/thumbnail?id=1SiLauobpcreDXJs40F-avykkivEOTiBD&sz=w800" alt="Apartment Care"/>
+        <div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Apartment Care</div></div><div class="pcard-arrow">↗</div>
+      </div>
+      <div class="pcard" data-project="Tile" data-cat="Motion & Video">
+        <img class="pcard-thumb" src="https://drive.google.com/thumbnail?id=1iuZZeAZGJJHQXuxqSQb8jl2MXicevkGk&sz=w800" alt="Tile"/>
+        <div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Tile</div></div><div class="pcard-arrow">↗</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-row reveal"><span class="cat-name">AI Products</span><div class="cat-line"></div></div>
+    <div class="grid3 stagger">
+      <div class="pcard" data-project="Lina" data-cat="AI Products"><div class="pcard-deco"></div><div class="pcard-inner"><div class="pcard-name">Lina</div></div><div class="pcard-arrow">↗</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-big reveal">LET'S<br>WORK</div>
+  <div class="foot-right reveal">
+    <div class="foot-sub">— AVAILABLE FOR FREELANCE</div>
+    <div class="foot-contacts">
+      <a class="foot-contact-link" href="mailto:huongdo4954@gmail.com">huongdo4954@gmail.com</a>
+      <a class="foot-contact-link" href="tel:+84337492814">+84 337 492 814</a>
+      <a class="foot-contact-link" href="https://www.behance.net/cmhng10" target="_blank">behance.net/cmhng10 ↗</a>
+    </div>
+    <a class="foot-cta" href="mailto:huongdo4954@gmail.com">GET IN TOUCH ↗</a>
+  </div>
+</footer>
+
+<!-- PROJECT DETAIL PAGE -->
+<div id="detail-page" style="display:none">
+  <div class="detail-nav">
+    <button class="detail-back" id="detail-back">
+      <span class="back-arrow">←</span>
+      <span class="back-label">BACK</span>
+    </button>
+    <div class="detail-breadcrumb">
+      <span id="detail-cat"></span>
+      <span style="opacity:0.3;margin:0 10px">/</span>
+      <span id="detail-title-nav"></span>
+    </div>
+  </div>
+
+  <div class="detail-hero">
+    <div class="detail-hero-label" id="detail-cat-label"></div>
+    <h1 class="detail-hero-title" id="detail-hero-title"></h1>
+  </div>
+
+  <div class="detail-images" id="detail-images"></div>
+
+  <div class="detail-footer-nav">
+    <button class="detail-back-bottom" id="detail-back-bottom">← BACK TO PROJECTS</button>
+  </div>
+</div>
+
+<style>
+  /* DETAIL PAGE */
+  #detail-page {
+    position: fixed; inset: 0;
+    background: var(--black);
+    z-index: 200;
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  #detail-page.visible { opacity: 1; }
+
+  .detail-nav {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; gap: 24px;
+    padding: 20px 48px;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-back {
+    display: flex; align-items: center; gap: 8px;
+    background: none; border: 1px solid var(--border);
+    color: var(--white); font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    padding: 8px 16px; border-radius: 2px;
+    cursor: none; transition: all 0.3s;
+  }
+  .detail-back:hover {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .back-arrow { font-size: 14px; transition: transform 0.3s; }
+  .detail-back:hover .back-arrow { transform: translateX(-3px); }
+  .detail-breadcrumb {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; color: rgba(245,240,232,0.35);
+  }
+  #detail-title-nav { color: rgba(245,240,232,0.7); }
+
+  .detail-hero {
+    padding: 80px 48px 56px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-hero-label {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: var(--accent); margin-bottom: 16px;
+  }
+  .detail-hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 140px);
+    line-height: 0.9; letter-spacing: 0.01em; color: var(--white);
+  }
+
+  .detail-images {
+    padding: 64px 48px;
+    display: flex; flex-direction: column; gap: 0;
+  }
+
+  .detail-img-item {
+    width: 100%;
+    position: relative;
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .detail-img-item.visible { opacity: 1; transform: none; }
+
+  /* Natural size — no forced aspect ratio */
+  .detail-img-slot {
+    width: 100%;
+    background: rgba(245,240,232,0.04);
+    border: none;
+    border-radius: 0;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    min-height: 120px;
+  }
+  /* Empty slots still show placeholder at 16:9 */
+  .detail-img-slot:not(.has-image) { aspect-ratio: 16/9; }
+
+  .detail-img-slot.has-image { background: #0a0a0a; }
+  .detail-img-slot img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .detail-img-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    pointer-events: none;
+  }
+  .placeholder-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; color: rgba(245,240,232,0.06); line-height: 1;
+  }
+  .placeholder-label {
+    font-family: 'Space Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; color: rgba(245,240,232,0.18);
+  }
+
+  /* upload disabled */
+  .upload-input { display: none; }
+  .upload-hint { display: none; }
+  .exp-logo-upload { display: none; }
+  .exp-logo-hint { display: none; }
+  .tool-icon-upload { display: none; }
+
+  .detail-footer-nav {
+    padding: 48px 48px 80px;
+    border-top: 1px solid var(--border);
+  }
+  .detail-video-slot {
+    width: 100%;
+    background: #000;
+    position: relative;
+  }
+  .detail-video-slot iframe {
+    width: 100%; aspect-ratio: 16/9; border: none; display: block;
+  }
+  .detail-back-bottom {
+    background: none; border: 1px solid var(--border);
+    color: rgba(245,240,232,0.5); font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    padding: 12px 24px; border-radius: 2px;
+    cursor: none; transition: all 0.3s;
+  }
+  .detail-back-bottom:hover {
+    border-color: var(--accent); color: var(--white);
+  }
+
+  @media (max-width: 900px) {
+    .detail-nav { padding: 16px 24px; }
+    .detail-hero { padding: 56px 24px 40px; }
+    .detail-images { padding: 40px 24px; }
+    .detail-footer-nav { padding: 40px 24px 60px; }
+  }
+</style>
+
+<script>
+  // Custom cursor
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.transform = `translate(${mx - 5}px, ${my - 5}px)`;
+  });
+  (function animRing() {
+    rx += (mx - rx - 18) * 0.13;
+    ry += (my - ry - 18) * 0.13;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animRing);
+  })();
+
+  // Scroll reveal for main page
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal, .stagger').forEach(el => obs.observe(el));
+
+  // ── COMPANY LOGO UPLOAD ──
+  document.querySelectorAll('.exp-logo-upload').forEach(input => {
+    input.addEventListener('change', function() {
+      if (!this.files[0]) return;
+      const logo = this.closest('.exp-logo');
+      const reader = new FileReader();
+      reader.onload = ev => {
+        // Remove all existing content except the input and hint
+        Array.from(logo.children).forEach(c => {
+          if (!c.classList.contains('exp-logo-upload') && !c.classList.contains('exp-logo-hint')) c.remove();
+        });
+        const img = document.createElement('img');
+        img.src = ev.target.result;
+        img.style.cssText = 'filter:none;opacity:1;max-width:100%;max-height:100%;object-fit:contain;position:relative;z-index:1;';
+        logo.insertBefore(img, this);
+        logo.classList.add('has-custom');
+        logo.querySelector('.exp-logo-hint').textContent = 'CHANGE';
+      };
+      reader.readAsDataURL(this.files[0]);
+    });
+  });
+
+  // ── TOOL ICON UPLOAD ──
+  document.querySelectorAll('.tool-icon-upload').forEach(input => {
+    input.addEventListener('change', function() {
+      if (!this.files[0]) return;
+      const icon = this.closest('.tool-icon');
+      const reader = new FileReader();
+      reader.onload = ev => {
+        // Replace all visual content with uploaded image
+        Array.from(icon.children).forEach(c => {
+          if (!c.classList.contains('tool-icon-upload')) c.remove();
+        });
+        const img = document.createElement('img');
+        img.src = ev.target.result;
+        img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;';
+        icon.insertBefore(img, this);
+      };
+      reader.readAsDataURL(this.files[0]);
+    });
+  });
+  const detailPage   = document.getElementById('detail-page');
+  const detailCat    = document.getElementById('detail-cat');
+  const detailCatLbl = document.getElementById('detail-cat-label');
+  const detailTitleNav = document.getElementById('detail-title-nav');
+  const detailTitle  = document.getElementById('detail-hero-title');
+  const detailImages = document.getElementById('detail-images');
+
+  // Pre-loaded images per project (Google Drive thumbnail API)
+  const projectPreloaded = {
+    'Under Cover': [
+      'https://drive.google.com/thumbnail?id=1NrRKsfsbNOsNYMzZbgMfsxzfLbLcq2k2&sz=w1600', // 1.png
+      'https://drive.google.com/thumbnail?id=1rZGSn0YOfMdljdeyUIfNNpZXQtUQGWoD&sz=w1600', // 2.png
+      'https://drive.google.com/thumbnail?id=1DvowZz2j7ZZeQuuEjXCfIkoxHbgJvYTS&sz=w1600', // 3.png
+      'https://drive.google.com/thumbnail?id=1zjLeBQ9WeysActYeinwKQw_SigrxUh4-&sz=w1600',  // 4.png
+      'https://drive.google.com/thumbnail?id=1PfrGjccLPHtjiagZhTNHn2EigGVgt8df&sz=w1600', // 5.png
+      'https://drive.google.com/thumbnail?id=1H3heHg5J5tn7cBTzGhvGOdg4t5875oV1&sz=w1600', // 6.png
+      'https://drive.google.com/thumbnail?id=1Ak2b94sI37taWqdhcjthRsowRpA_Akcx&sz=w1600', // 7.png
+      'https://drive.google.com/thumbnail?id=1OlfGcPQEKpCQwTnd-sl-mKxHomP-Bg9d&sz=w1600', // 8.png
+      'https://drive.google.com/thumbnail?id=1bPcwKiwcrXZkjHYtccSJzX855H0nN0V9&sz=w1600', // 9.png
+      'https://drive.google.com/thumbnail?id=1_29AOrKoNg4I-zo-22LKtI27cAlzs5ju&sz=w1600', // 10.png
+    ],
+    'Onwa': [
+      'https://drive.google.com/thumbnail?id=1G9ms51b7flPQFYJn5nwgkiSYD828I2Wx&sz=w1600', // 1.gif
+      'https://drive.google.com/thumbnail?id=1Gvmvfnyeq_rvVh2tVlhOSX54wlSgyNB2&sz=w1600', // 2.gif
+      'https://drive.google.com/thumbnail?id=1fGJ8CRFSaVKUC5AO_HFq6BZFT2O9O6ge&sz=w1600', // 3.png
+      'https://drive.google.com/thumbnail?id=1ef1kRud9bCbuewZ-9qa5BWYcbDH_rdv4&sz=w1600',  // 4.png
+      'https://drive.google.com/thumbnail?id=1sEclCG0T3eQXwnfjwGtbdpgulv5jGf1e&sz=w1600', // 5.png
+      'https://drive.google.com/thumbnail?id=1d0yFyaaP00xzCAWat6rw4-3ZMgjhxZME&sz=w1600', // 6.gif
+      'https://drive.google.com/thumbnail?id=17YbT_smaMy7_JdcW__9am6CTabsgdBoQ&sz=w1600', // 7.gif
+      'https://drive.google.com/thumbnail?id=1ygH5JOKtpyLhKG_3N7V9_zqklLejUro0&sz=w1600', // 8.gif
+      'https://drive.google.com/thumbnail?id=1Q0CRfweNc_VjrJcnFBge6k81blZ_gb_e&sz=w1600', // 9.gif
+      'https://drive.google.com/thumbnail?id=15XOrpHhwQMhlkXQOnGhnEysmwTnn3JKU&sz=w1600', // 10.gif
+      'https://drive.google.com/thumbnail?id=1z2kfxHa-dvDBqO7gzw4uidIoN4lBMNPZ&sz=w1600', // 11.gif
+      'https://drive.google.com/thumbnail?id=1MXSxXwrbg2Lpa4QO40Eqmj2rH3JDGnKI&sz=w1600', // 12.png
+      'https://drive.google.com/thumbnail?id=1qAvG6YOzDg76-5w4juBblkV5PyNTZp_z&sz=w1600', // 13.png
+      'https://drive.google.com/thumbnail?id=1lf4LyCSkt5jur7RRFIEXIFdvKpYlwGZL&sz=w1600', // 14.png
+      'https://drive.google.com/thumbnail?id=1kya9PxGAwlD-wSqDUFCc_Bl6za8C9mBt&sz=w1600', // 15.png
+      'https://drive.google.com/thumbnail?id=1OsIVNOtGiwMRcDjU0HPbaxBza-UPZWEQ&sz=w1600', // 16.png
+    ],
+    'Tinpet': [
+      'https://drive.google.com/thumbnail?id=1fzLKwK56r1d3EsvXnhVM8C2d1CwTzyWf&sz=w1600', // 1.png
+      'https://drive.google.com/thumbnail?id=1HVJX2c7m0YkmkupDg9EtXd2wiDG7uzyj&sz=w1600', // 2.png
+      'https://drive.google.com/thumbnail?id=1uJlUj2UeJyrQ99zPOk8CHDywGQTu4wCg&sz=w1600', // 3.png
+      'https://drive.google.com/thumbnail?id=1oHb8KVZgz8Qg0ntq1V9SgK4L9RjA0NWP&sz=w1600', // 4.png
+      'https://drive.google.com/thumbnail?id=1Nyt-KtLH2ogC2EVG-iXMLiOfFs-JaKZs&sz=w1600', // 5.png
+      'https://drive.google.com/thumbnail?id=1RjbewfP9JQwLYX3ktJw-OE9uki5PwFU5&sz=w1600', // 6.png
+      'https://drive.google.com/thumbnail?id=1soUeV9IG2QObdiOLpJDlsjnItD82a7G1&sz=w1600', // 7.png
+      'https://drive.google.com/thumbnail?id=1vSFbvWQCJLGtljeZU4zajlYtZGUIc_bI&sz=w1600', // 8.png
+      'https://drive.google.com/thumbnail?id=1rlTEotpizLuCDPA7JW4AmIMyyfrAGk4N&sz=w1600', // 9.png
+      'https://drive.google.com/thumbnail?id=15v6dPtyPu35_hG20bdfdDLGH0jRHtY9G&sz=w1600', // 10.png
+      'https://drive.google.com/thumbnail?id=12dC0ouK4HXYK8qJOCwDzJgiNQznLbKLm&sz=w1600', // 11.png
+      'https://drive.google.com/thumbnail?id=1ETUGDRciUm6uotFUyoQ6Bxq5rm1YcPWm&sz=w1600', // 12.png
+      'https://drive.google.com/thumbnail?id=16haPlsd09OJWJ9yMXZM0HpM9TWanTO6Y&sz=w1600', // 13.png
+      'https://drive.google.com/thumbnail?id=1suKsq1nnoBJ3UmYns9RNktyl-N9to_xD&sz=w1600', // 14.png
+      'https://drive.google.com/thumbnail?id=1JWN1HEgKa-2abZj8MLUFl8pJ3qo9VXxn&sz=w1600', // 15.png
+      'https://drive.google.com/thumbnail?id=1wfgJRWtIApxAKkcCPR1jXxMnjABa9OHt&sz=w1600', // 16.png
+      'https://drive.google.com/thumbnail?id=1RotW7I9X5GfE35yqo9uwsy9HC7CUpyIO&sz=w1600', // 17.png
+      'https://drive.google.com/thumbnail?id=1n1MQCzR3zGAY50qilbjcnsq9c27zoD5B&sz=w1600', // 18.png
+      'https://drive.google.com/thumbnail?id=1IEr6rrua9OfUK7ugWcdnZ6XIfG88dY13&sz=w1600', // 19.png
+      'https://drive.google.com/thumbnail?id=1owrjvClonaXDVpZysLQRHPSgupsppFTn&sz=w1600', // 20.png
+      'https://drive.google.com/thumbnail?id=1bRHMN6sLTLEJNIklSJWe4mUe87W9_IBX&sz=w1600', // 21.png
+      'https://drive.google.com/thumbnail?id=1vIEc4ZqCNkJlkE5gkLwWmMBWw_he75YF&sz=w1600', // 22.png
+      'https://drive.google.com/thumbnail?id=1JCxWVDWGdS2jU-bEyX7MQD_LIOfNakMo&sz=w1600', // 23.png
+    ],
+    'Phúc Long': [
+      'https://drive.google.com/thumbnail?id=1kbkXdDDTKLHwHkq509Eo0jskStXYt66L&sz=w1600', // 1.png
+      'https://drive.google.com/thumbnail?id=1Fs4YVbS-AekSgpJRKKdgGR5XXiLu-reQ&sz=w1600', // 2.png
+      'https://drive.google.com/thumbnail?id=1ovniQFEBQNKH7-x8d4l2wVIakknLeUYn&sz=w1600', // 3.png
+      'https://drive.google.com/thumbnail?id=1KTYSJvbUdKXXkBqfkTRRZyGj8tRkG-_M&sz=w1600', // 4.png
+      'https://drive.google.com/thumbnail?id=16ae99_ywi4O9XxHq5khL24jTygOUss_W&sz=w1600', // 5.png
+      'https://drive.google.com/thumbnail?id=1XDM9_CyTA7SNuIDQcmTT54DPgnUmqGCz&sz=w1600', // 6.png
+      'https://drive.google.com/thumbnail?id=1lO7zXz16TaGgD8uRvrNlhSkYFFzVdHf-&sz=w1600', // 7.png
+      'https://drive.google.com/thumbnail?id=1N4wXmQRB1xj11E4FWsQaluLPbvqkVDGd&sz=w1600', // 8.png
+      'https://drive.google.com/thumbnail?id=12XlmzcB8uBN9wQYdA008Fqq_M_e-yZY-&sz=w1600', // 9.png
+      'https://drive.google.com/thumbnail?id=1Kq_r_7A6s4ebe1u6XkGnncL0qmuUDUU6&sz=w1600', // 10.png
+      'https://drive.google.com/thumbnail?id=1rkxawZELBnA2JP18Lrml2IvyhLsjoevz&sz=w1600', // 11.png
+    ]
+  };
+
+  // Video-only projects (Google Drive embed)
+  const projectVideos = {
+    'Tile': {
+      thumb: '1iuZZeAZGJJHQXuxqSQb8jl2MXicevkGk',
+      videos: [{ id: '1SFXBZScuq53GC6rgsDAhgYJwobdTzjND', title: 'TILE-VIDEO' }]
+    },
+    'Apartment Care Motion': {
+      thumb: '1SiLauobpcreDXJs40F-avykkivEOTiBD',
+      videos: [{ id: '1Iei1yUgshu9ZnGWYRDkUI3wOOAYc4sLS', title: 'APARTMENT CARE' }]
+    },
+    'RbR Event': {
+      thumb: '1EbXFTS_d4EaAcg1Y0ij10WLBMdlJkm_G',
+      videos: [{ id: '13J2_wD8UGK0Gutvv2zIhX6LRCdpurlPO', title: 'RbR EVENT' }]
+    }
+  };
+
+  // Store uploaded images per project
+  const projectImages = {};
+
+  function showDetailPage() {
+    document.body.style.overflow = 'hidden';
+    detailPage.style.display = 'block';
+    detailPage.scrollTop = 0;
+    requestAnimationFrame(() => detailPage.classList.add('visible'));
+    setTimeout(() => {
+      detailImages.querySelectorAll('.detail-img-item').forEach(el => el.classList.add('visible'));
+    }, 120);
+  }
+
+  function openProject(name, cat) {
+    detailCat.textContent = cat;
+    detailCatLbl.textContent = '— ' + cat;
+    detailTitleNav.textContent = name;
+    detailTitle.textContent = name;
+    detailImages.innerHTML = '';
+
+    // VIDEO PROJECT
+    const videoData = projectVideos[name];
+    if (videoData && videoData.videos.length > 0) {
+      // Video player only
+      videoData.videos.forEach(v => {
+        const item = document.createElement('div');
+        item.className = 'detail-img-item';
+        item.innerHTML = `
+          <div class="detail-video-slot">
+            <iframe
+              src="https://drive.google.com/file/d/${v.id}/preview"
+              allow="autoplay"
+              allowfullscreen
+              style="width:100%;aspect-ratio:16/9;border:none;display:block;background:#000;">
+            </iframe>
+          </div>`;
+        detailImages.appendChild(item);
+      });
+      showDetailPage();
+      return;
+    }
+
+    // IMAGE PROJECT
+    const uploaded = projectImages[name] || [];
+    const preloaded = projectPreloaded[name] || [];
+    const total = preloaded.length > 0 ? preloaded.length : 15;
+
+    for (let i = 0; i < total; i++) {
+      const item = document.createElement('div');
+      item.className = 'detail-img-item';
+
+      const slot = document.createElement('div');
+      const srcUrl = uploaded[i] || preloaded[i] || null;
+      slot.className = 'detail-img-slot' + (srcUrl ? ' has-image' : '');
+
+      if (srcUrl) {
+        const img = document.createElement('img');
+        img.src = srcUrl;
+        img.style.cssText = 'width:100%;height:auto;display:block;';
+        img.onerror = () => {
+          slot.classList.remove('has-image');
+          img.remove();
+          const ph = document.createElement('div');
+          ph.className = 'detail-img-placeholder';
+          ph.innerHTML = `<div class="placeholder-num">${String(i+1).padStart(2,'0')}</div><div class="placeholder-label">IMAGE UNAVAILABLE — CLICK TO UPLOAD</div>`;
+          slot.insertBefore(ph, slot.querySelector('.upload-hint'));
+        };
+        slot.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'detail-img-placeholder';
+        ph.innerHTML = `<div class="placeholder-num">${String(i+1).padStart(2,'0')}</div><div class="placeholder-label">CLICK TO UPLOAD IMAGE</div>`;
+        slot.appendChild(ph);
+      }
+
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = 'image/*';
+      inp.className = 'upload-input';
+      const idx = i;
+      inp.addEventListener('change', function() {
+        if (!this.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+          if (!projectImages[name]) projectImages[name] = [];
+          projectImages[name][idx] = ev.target.result;
+          slot.innerHTML = '';
+          slot.classList.add('has-image');
+          const img = document.createElement('img');
+          img.src = ev.target.result;
+          img.style.cssText = 'width:100%;height:auto;display:block;';
+          slot.appendChild(img);
+          const newInp = inp.cloneNode();
+          slot.appendChild(newInp);
+          const hint = document.createElement('div');
+          hint.className = 'upload-hint'; hint.textContent = 'CLICK TO CHANGE';
+          slot.appendChild(hint);
+        };
+        reader.readAsDataURL(this.files[0]);
+      });
+      slot.appendChild(inp);
+
+      const hint = document.createElement('div');
+      hint.className = 'upload-hint';
+      hint.textContent = srcUrl ? 'CLICK TO CHANGE' : 'CLICK TO UPLOAD';
+      slot.appendChild(hint);
+
+      item.appendChild(slot);
+      detailImages.appendChild(item);
+    }
+
+    showDetailPage();
+  }
+
+  function closeProject() {
+    detailPage.classList.remove('visible');
+    setTimeout(() => {
+      detailPage.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 500);
+  }
+
+  // Attach click to all project cards
+  document.querySelectorAll('.pcard[data-project]').forEach(card => {
+    card.addEventListener('click', () => {
+      openProject(card.dataset.project, card.dataset.cat);
+    });
+  });
+
+  document.getElementById('detail-back').addEventListener('click', closeProject);
+  document.getElementById('detail-back-bottom').addEventListener('click', closeProject);
+
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && detailPage.style.display !== 'none') closeProject();
+  });
+</script>
+</body>
+</html>
